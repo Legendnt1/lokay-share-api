@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # Servicio de la API (Node.js)
+  api:
+    build:
+      context: ./api  # Directorio donde está el Dockerfile
+      dockerfile: Dockerfile
+    image: lokay-share-api
+    container_name: lokay_share_api_service
+    ports:
+      - "3000:3000" # Mapea el puerto 3000 del host al 3000 del contenedor
+    environment:
+      # Pasa la URI de conexión de Mongo. 
+      # 'mongo_db' es el nombre del servicio de la base de datos.
+      MONGO_URI: mongodb://mongo_db:27017/lokay-share-db
+      PORT: 3000
+    volumes:
+      # Monta el código fuente para desarrollo (hot-reload)
+      # Nota: 'npm run dev' (con nodemon) debe estar corriendo
+      - ./api/src:/usr/src/app/src
+    depends_on:
+      - mongo_db # Asegura que MongoDB inicie primero
+    networks:
+      - lokay-net
+
+  # Servicio de la Base de Datos (MongoDB)
+  mongo_db:
+    image: mongo:latest
+    container_name: lokay_share_mongo
+    volumes:
+      # Persiste los datos de MongoDB en el host
+      - mongo-data:/data/db
+    networks:
+      - lokay-net
+
+# Red personalizada
+networks:
+  lokay-net:
+    driver: bridge
+
+# Volumen para persistencia de datos de Mongo
+volumes:
+  mongo-data:
+    driver: local

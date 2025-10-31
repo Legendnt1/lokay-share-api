@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  api:
+    image: almendrazzz/lokay-share-api:latest # <-- Esta es la clave
+    container_name: lokay_share_api_service
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URI: mongodb://mongo_db:27017/lokay-share-db
+      PORT: 3000
+    depends_on:
+      - mongo_db
+    networks:
+      - lokay-net
+
+  mongo_db:
+    image: mongo:latest
+    container_name: lokay_share_mongo
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - lokay-net
+
+networks:
+  lokay-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local

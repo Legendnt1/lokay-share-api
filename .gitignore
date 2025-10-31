@@ -1,0 +1,18 @@
+# Dependencies
+/api/node_modules
+
+# Environment variables
+/api/.env
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+/build
+/dist
