@@ -1,24 +1,30 @@
-version: '3.8'
+version: '3.9'
 
 services:
   api:
-    image: almendrazzz/lokay-share-api:latest # <-- Esta es la clave
+    image: almendrazzz/lokay-share-api:v1.0.0
     container_name: lokay_share_api_service
     ports:
       - "3000:3000"
     environment:
-      MONGO_URI: mongodb://mongo_db:27017/lokay-share-db
+      MONGO_URI: mongodb://admin:admin123@mongo_db:27017/lokay-share-db?authSource=admin
       PORT: 3000
     depends_on:
       - mongo_db
+    restart: always
     networks:
       - lokay-net
 
   mongo_db:
-    image: mongo:latest
+    image: mongo:7
     container_name: lokay_share_mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: lokay-share-db
     volumes:
       - mongo-data:/data/db
+    restart: always
     networks:
       - lokay-net
 
