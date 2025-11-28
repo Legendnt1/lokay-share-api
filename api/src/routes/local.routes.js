@@ -7,7 +7,9 @@ const {
   actualizarLocal,
   eliminarLocal,
   toggleLikePublicacion,
-  crearComentarioPublicacion
+  crearComentarioPublicacion,
+  crearResena,
+  crearPublicacion
 } = require('../controllers/local.controller');
 
 // /api/locales
@@ -19,5 +21,7 @@ router.delete('/:id', eliminarLocal);
 
 router.post('/:id/publicaciones/:publicacionId/like', toggleLikePublicacion);
 router.post('/:id/publicaciones/:publicacionId/comentarios', crearComentarioPublicacion);
+router.post('/:id/resenas', crearResena);
+router.post('/:id/publicaciones', crearPublicacion);
 
 module.exports = router;

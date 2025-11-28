@@ -224,3 +224,75 @@ exports.crearComentarioPublicacion = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// POST /api/locales/:id/resenas
+exports.crearResena = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId, usuarioNombre, calificacion, texto } = req.body;
+
+    if (!userId || !usuarioNombre || !calificacion) {
+      return res.status(400).json({
+        message: "userId, usuarioNombre y calificacion son requeridos",
+      });
+    }
+
+    const local = await Local.findById(id);
+    if (!local) {
+      return res.status(404).json({ message: "Local no encontrado" });
+    }
+
+    // Crear reseña
+    local.reseñas.push({
+      id_usuario: userId,
+      usuario_nombre: usuarioNombre,
+      calificacion,
+      texto,
+      // fecha se genera con default del schema
+    });
+
+    await local.save();
+
+    const nuevaResena = local.reseñas[local.reseñas.length - 1];
+
+    res.status(201).json(nuevaResena);
+  } catch (error) {
+    console.error("Error creando reseña:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// POST /api/locales/:id/publicaciones
+exports.crearPublicacion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { texto, url_imagen } = req.body;
+
+    if (!texto) {
+      return res.status(400).json({ message: "El texto de la publicación es requerido" });
+    }
+
+    const local = await Local.findById(id);
+    if (!local) {
+      return res.status(404).json({ message: "Local no encontrado" });
+    }
+
+    local.publicaciones.push({
+      texto,
+      url_imagen: url_imagen || null,
+      likes: 0,
+      likedBy: [],
+      comentarios: [],
+    });
+
+    await local.save();
+
+    const nuevaPublicacion =
+      local.publicaciones[local.publicaciones.length - 1];
+
+    return res.status(201).json(nuevaPublicacion);
+  } catch (error) {
+    console.error("Error creando publicación:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
