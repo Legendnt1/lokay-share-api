@@ -15,9 +15,6 @@ router.get('/:id', obtenerLocalPorId);
 router.put('/:id', actualizarLocal);
 router.delete('/:id', eliminarLocal);
 
-router.post(
-  '/:id/publicaciones/:publicacionId/like',
-  localesController.toggleLikePublicacion
-);
+router.post('/:id/publicaciones/:publicacionId/like', toggleLikePublicacion);
 
 module.exports = router;
