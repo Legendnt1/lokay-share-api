@@ -25,6 +25,7 @@ const PublicacionSchema = new Schema({
   texto: { type: String, required: true },
   url_imagen: { type: String },
   likes: { type: Number, default: 0 },
+  likedBy: [{ type: Schema.Types.ObjectId, ref: 'Usuario' }],
   comentarios: [ComentarioSchema]
 });
 
