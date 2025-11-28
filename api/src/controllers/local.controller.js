@@ -108,3 +108,119 @@ exports.toggleLikePublicacion = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+// POST /api/locales/:id/publicaciones/:publicacionId/comentarios
+exports.crearComentarioPublicacion = async (req, res) => {
+  try {
+    const { id, publicacionId } = req.params;
+    const { userId, usuarioNombre, texto } = req.body;
+
+    if (!userId || !usuarioNombre || !texto) {
+      return res
+        .status(400)
+        .json({ message: 'userId, usuarioNombre y texto son requeridos' });
+    }
+
+    const local = await Local.findById(id);
+    if (!local) {
+      return res.status(404).json({ message: 'Local no encontrado' });
+    }
+
+    const publicacion = local.publicaciones.id(publicacionId);
+    if (!publicacion) {
+      return res.status(404).json({ message: 'Publicación no encontrada' });
+    }
+
+    // push al array de comentarios (Mongoose castea el string a ObjectId)
+    publicacion.comentarios.push({
+      id_usuario: userId,
+      usuario_nombre: usuarioNombre,
+      texto,
+      // fecha se pone sola por el default del schema
+    });
+
+    await local.save();
+
+    // último comentario agregado
+    const nuevoComentario =
+      publicacion.comentarios[publicacion.comentarios.length - 1];
+
+    return res.status(201).json(nuevoComentario);
+  } catch (error) {
+    console.error('Error al crear comentario:', error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// DELETE /api/locales/:id/publicaciones/:publicacionId/comentarios/:comentarioId
+exports.eliminarComentarioPublicacion = async (req, res) => {
+  try {
+    const { id, publicacionId, comentarioId } = req.params;
+
+    const local = await Local.findById(id);
+    if (!local) {
+      return res.status(404).json({ message: 'Local no encontrado' });
+    }
+
+    const publicacion = local.publicaciones.id(publicacionId);
+    if (!publicacion) {
+      return res.status(404).json({ message: 'Publicación no encontrada' });
+    }
+
+    const comentario = publicacion.comentarios.id(comentarioId);
+    if (!comentario) {
+      return res.status(404).json({ message: 'Comentario no encontrado' });
+    }
+
+    // Eliminar el subdocumento
+    comentario.deleteOne(); // o publicacion.comentarios.id(comentarioId).deleteOne()
+
+    await local.save();
+
+    return res.status(200).json({ message: 'Comentario eliminado' });
+  } catch (error) {
+    console.error('Error al eliminar comentario:', error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// POST /api/locales/:id/publicaciones/:publicacionId/comentarios
+exports.crearComentarioPublicacion = async (req, res) => {
+  try {
+    const { id, publicacionId } = req.params;
+    const { userId, usuarioNombre, texto } = req.body;
+
+    if (!userId || !usuarioNombre || !texto) {
+      return res.status(400).json({
+        message: "userId, usuarioNombre y texto son requeridos",
+      });
+    }
+
+    const local = await Local.findById(id);
+    if (!local) {
+      return res.status(404).json({ message: "Local no encontrado" });
+    }
+
+    const publicacion = local.publicaciones.id(publicacionId);
+    if (!publicacion) {
+      return res.status(404).json({ message: "Publicación no encontrada" });
+    }
+
+    publicacion.comentarios.push({
+      id_usuario: userId,
+      usuario_nombre: usuarioNombre,
+      texto,
+      // fecha se genera sola por el schema
+    });
+
+    await local.save();
+
+    const nuevoComentario =
+      publicacion.comentarios[publicacion.comentarios.length - 1];
+
+    res.status(201).json(nuevoComentario);
+  } catch (error) {
+    console.error("Error creando comentario:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
