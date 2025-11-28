@@ -83,7 +83,7 @@ const seed = async () => {
         publicaciones: [
           {
             texto: '¡Nuevo método de extracción en la casa! Ven a probar nuestro V60 con granos de Chanchamayo. ☕️',
-            url_imagen: 'https://images.unsplash.com/photo-1511920183353-3c7c95a5742c',
+            url_imagen: 'https://images.unsplash.com/photo-1556742400-b5b7c5121f99?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             comentarios: [
               {
                 id_usuario: luis._id,
