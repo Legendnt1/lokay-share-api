@@ -17,5 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # 7. Comando para iniciar la aplicación
-# Usamos 'npm run dev' para aprovechar nodemon y el hot-reload del volumen
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npm run seed && npm run dev"]
