@@ -5,7 +5,8 @@ const {
   obtenerLocales,
   obtenerLocalPorId,
   actualizarLocal,
-  eliminarLocal
+  eliminarLocal,
+  toggleLikePublicacion
 } = require('../controllers/local.controller');
 
 // /api/locales
