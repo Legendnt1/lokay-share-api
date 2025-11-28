@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # 7. Comando para iniciar la aplicación
-CMD ["sh", "-c", "npm run seed && npm run dev"]
+CMD ["npm", "run", "dev"]
